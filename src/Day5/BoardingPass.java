@@ -1,5 +1,5 @@
 package Day5;
-
+//ACCIDENTALLY COPIED OVER PART 1. SORRY!
 import com.sun.xml.internal.bind.v2.model.core.ID;
 
 import java.io.BufferedReader;
@@ -35,10 +35,10 @@ public class BoardingPass {
                     int max = Math.max(IDs.get(i), IDs.get(k));
                     int min = Math.min(IDs.get(i), IDs.get(k));
                     int val = min+1;
-                    
+
                     if(!IDs.contains(val))
                     System.out.println("Your Passes: "+max+"-"+min+" Your Boarding Pass ID: " + val);
-
+                    break;
                 }
             }
         }
