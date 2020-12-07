@@ -1,15 +1,11 @@
 package Day6;
 
-import com.sun.deploy.util.StringUtils;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class CustomCustoms {
     public static void main(String[] args) throws IOException, IllegalAccessException {
@@ -17,6 +13,8 @@ public class CustomCustoms {
         File data = new File("customs.txt");
         BufferedReader br = new BufferedReader(new FileReader(data));
 
+        part1(customs, br);
+        br = new BufferedReader(new FileReader(data));
         part2(customs, br);
     }
 
@@ -29,7 +27,6 @@ public class CustomCustoms {
         while ((line = br.readLine()) != null) {
             if (!line.isEmpty()) {
                 party += line;
-                System.out.println(party);
             }
             if (line.isEmpty()) {
                 sum += party.chars().distinct().count();
@@ -42,34 +39,55 @@ public class CustomCustoms {
     public static void part2(ArrayList<String> customs, BufferedReader br) throws IOException {
         String line;
         String party = "";
-        String last = "";
         int sum = 0;
-        int ppl = 0;
+        float groupCount = 0;
 
         while ((line = br.readLine()) != null) {
             if (!line.isEmpty()) {
                 party += line;
-                ppl++;
+                groupCount++;
             }
             if (line.isEmpty()) {
-                for (int i = 0; i < party.length(); i++) {
-                    int count = 0;
-                    for (int j = 0; j < party.length(); j++) {
-                        if (party.charAt(i) == party.charAt(j))
-                            count++;
-                    }
-                    if (count == ppl) {
-                        party.replace(String.valueOf(party.charAt(i)), "");
-                        sum += 1;
+                if (groupCount == 1) {
+                    sum += party.chars().distinct().count();
+                } else if (groupCount == party.chars().distinct().count()) {
+                    sum += 0;
+                } else if (party.chars().distinct().count() == 1) {
+                    sum++;
+                } else {
+                    Map<String, Long> collect = party.chars().mapToObj(i -> (char) i)
+                            .collect(Collectors.groupingBy(Object::toString, Collectors.counting()));
+
+                    for (Map.Entry<String, Long> entry : collect.entrySet()) {
+                        if (entry.getValue() == groupCount)
+                            sum++;
                     }
 
                 }
                 party = "";
-                ppl = 0;
+                groupCount = 0;
             }
         }
-        System.out.println("Sum: "+sum);
+        if (groupCount == 1) {
+            sum += party.chars().distinct().count();
+        } else if (groupCount == party.chars().distinct().count()) {
+            sum += 0;
+        } else if (party.chars().distinct().count() == 1) {
+            sum++;
+        } else {
+            Map<String, Long> collect = party.chars().mapToObj(i -> (char) i)
+                    .collect(Collectors.groupingBy(Object::toString, Collectors.counting()));
+
+            for (Map.Entry<String, Long> entry : collect.entrySet()) {
+                if (entry.getValue() == groupCount)
+                    sum++;
+            }
+
+        }
+
+        System.out.println("Unanimous Votes: " + sum);
     }
 }
+
 
 
