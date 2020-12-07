@@ -12,7 +12,7 @@ public class Bags {
 
         File data = new File("bags.txt");
         BufferedReader br = new BufferedReader(new FileReader(data));
-        int total = 0;
+        int count = 0;
 
         String line;
         while ((line = br.readLine()) != null) {
@@ -20,29 +20,34 @@ public class Bags {
             String[] bagrules = (line.substring(line.indexOf("contain") + "contain".length()).trim().replace(".", "").split(", "));
             rules.put(ruleBag, bagrules);
         }
+
         List<String> list = new ArrayList<String>();
         for (Map.Entry<String, String[]> values : rules.entrySet()) {
             if (Arrays.asList(values.getValue()).toString().contains("shiny gold")) {
+                System.out.println(values.getKey());
                 list.add(values.getKey());
-                total++;
+                count++;
             }
         }
         for (int i = 0; i < list.size(); i++) {
-            System.out.println(list.get(i));
-        }
-        System.out.println("_____________________________________________________");
-        for (int i = 0; i < list.size(); i++) {
-            total = instanceCount(total, rules, list.get(i));
+            count = instanceCount(count, rules, list.get(i));
         }
 
-        System.out.println(total + " bags can contain at least ONE shiny gold bag");
+        System.out.println(count + " colours can contain at least ONE shiny gold bag");
     }
 
     public static int instanceCount(int count, Map<String, String[]> rules, String instance) {
+        List<String> list = new ArrayList<String>();
         for (Map.Entry<String, String[]> values : rules.entrySet()) {
             if (Arrays.asList(values.getValue()).toString().contains(instance.substring(0, instance.length() - 1))) {
+                System.out.println(values.getKey() + " & Comparing: " +instance);
+                list.add(values.getKey());
                 count++;
+                break;
             }
+        }
+        for (int i = 0; i < list.size(); i++) {
+            count = instanceCount(count, rules, list.get(i));
         }
         return count;
     }
