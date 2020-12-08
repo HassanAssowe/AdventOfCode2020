@@ -40,14 +40,11 @@ public class Bags {
         List<String> list = new ArrayList<String>();
         for (Map.Entry<String, String[]> values : rules.entrySet()) {
             if (Arrays.asList(values.getValue()).toString().contains(instance.substring(0, instance.length() - 1))) {
-                System.out.println(values.getKey() + " & Comparing: " +instance);
-                list.add(values.getKey());
+                System.out.println(values.getKey());
+                list.add(instance);
                 count++;
-                break;
+                return  count;
             }
-        }
-        for (int i = 0; i < list.size(); i++) {
-            count = instanceCount(count, rules, list.get(i));
         }
         return count;
     }
