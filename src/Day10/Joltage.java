@@ -7,25 +7,29 @@ import java.io.IOException;
 import java.util.*;
 
 public class Joltage {
+    int count1 = 0;
+
     public static void main(String[] args) throws IOException, IllegalAccessException {
         File file = new File("joltage.txt");
-        List<Long> data = new ArrayList<>();
+        List<Integer> data = new ArrayList<>();
         BufferedReader br = new BufferedReader(new FileReader(file));
         String line;
 
         while ((line = br.readLine()) != null) {
-            data.add(Long.parseLong(line));
+            data.add(Integer.parseInt(line));
         }
 
-        Collections.sort(data);
 
-        //part1(data);
+        part1(data);
         part2(data);
     }
 
-    public static void part1(List<Long> data) {
+    public static void part1(List<Integer> data) {
         int oneCount = 1;
         int threeCount = 0;
+
+        data.add(0);
+        Collections.sort(data);
 
         data.add(data.get(data.size() - 1) + 3);
 
@@ -39,34 +43,37 @@ public class Joltage {
         System.out.println("The number of 1-jolt differences multiplied by the number of 3-jolt differences: " + oneCount * threeCount);
     }
 
-    public static void part2(List<Long> data) {
+    public static void part2(List<Integer> data) {
+        Map<Integer, Long> memoization = new HashMap<>();
 
+        data.add(0);
+        Collections.sort(data);
         data.add(data.get(data.size() - 1) + 3);
-        System.out.println("Number of combinations: " + countPart2(data, 0));
+        memoization.put(data.size() - 1, 1L);
+
+        System.out.println("Number of combinations: " + counter(memoization, data, 0));
 
     }
 
-    public static int countPart2(List<Long> data, int count) {
-
-        if (data.size() == 1)
-            count++;
-
-        if (data.contains(data.get(0) + 1)) {
-            //System.out.println(data.subList(data.indexOf((data.get(0) + 1)), data.size()));
-            count = countPart2(data.subList(data.indexOf((data.get(0) + 1)), data.size()), count);
+    public static long counter(Map<Integer, Long> mem, List<Integer> data, int index) {
+        if (mem.containsKey(index)) {
+            return mem.get(index);
+        } else {
+            int adapter = data.get(index);
+            System.out.println(adapter);
+            long count = 0;
+            for (int j = 1; j <= 3; j++) {
+                int next = data.indexOf(adapter + j);
+                if (next != -1) {
+                    count += counter(mem, data, next);
+                    System.out.println(count);
+                }
+            }
+            mem.put(index, count);
+            return count;
         }
-        if (data.contains(data.get(0) + 2)) {
-            //System.out.println(data.subList(data.indexOf((data.get(0) + 2)), data.size()));
-            count = countPart2(data.subList(data.indexOf((data.get(0) + 2)), data.size()), count);
-        }
-        if (data.contains(data.get(0) + 3)) {
-            //System.out.println(data.subList(data.indexOf((data.get(0) + 3)), data.size()));
-            count = countPart2(data.subList(data.indexOf((data.get(0) + 3)), data.size()), count);
-        }
-        return count;
     }
-
-
 }
+
 
 
